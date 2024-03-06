@@ -17,7 +17,7 @@ if [ "${CAPS_ANSWER}" = "Y" ] ; then
   sudo installer -store -pkg "/tmp/podman-installer-macos-$(uname -m).pkg" -target /
   PODMAN_EXISTS=$(command -v podman > /dev/null ; echo $?)
   [[ $PODMAN_EXISTS = 0 ]] || echo -e "\nThe install appears to have failed.  Please install it manually from https://github.com/containers/podman/releases/latest and try again\n" || break
-  MENU
+  SETUP
 else
   echo -e "\nPodman needs to be installed before running this script.  Please install it manually from https://github.com/containers/podman/releases/latest and try again\n"
 fi
