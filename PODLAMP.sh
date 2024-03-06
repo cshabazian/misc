@@ -11,32 +11,35 @@ function SETUP {
 podman machine init
 podman machine set --rootful
 podman machine start
-[[ ! -d $HOME/htdocs ]] && mkdir $HOME/htdocs
+[[ ! -d $HOME/Documents/htdocs ]] && mkdir $HOME/Documents/htdocs
 podman pod create --name LAMP -p 80:80
 podman run -d --name LAMP-mariadb --pod LAMP -e MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1 mariadb:latest
-podman run -d --name LAMP-PMA --pod LAMP -e PMA_HOST=127.0.0.1 -e PMA_PORT=3306 -v $HOME/htdocs:/var/www/html/htdocs phpmyadmin
-echo -e "\nPODLAMP has been setup and should be running\nFiles in $HOME/htdocs will show up in http://localhost/htdocs/<filename>\n"
+podman run -d --name LAMP-PMA --pod LAMP -e PMA_HOST=127.0.0.1 -e PMA_PORT=3306 -v $HOME/Documents/htdocs:/var/www/html/htdocs phpmyadmin
+echo -e "\nPODLAMP has been setup and should be running\nFiles in $HOME/Documents/htdocs will show up in http://localhost/htdocs/<filename>\nphpMyAdmin can be accessed at http://localhost\n"
 MENU
 }
 
 function START {
 podman start LAMP-mariadb LAMP-PMA
-echo -e "\nPODLAMP should now be running\nFiles in $HOME/htdocs will show up in http://localhost/htdocs/<filename>\n"
+echo -e "\nPODLAMP should now be running\nFiles in $HOME/Documents/htdocs will show up in http://localhost/htdocs/<filename>\nphpMyAdmin can be accessed at http://localhost\n"
+MENU
 }
 
 function STOP {
 podman stop LAMP-mariadb LAMP-PMA
 echo -e "\nPODLAMP should now be stopped\n"
+MENU
 }
 
 function DESTROY {
-STOP
+podman stop LAMP-mariadb LAMP-PMA
 podman rm LAMP-mariadb LAMP-PMA
 podman pod rm LAMP
-podman image rm mariadb phpmyadmin
+podman image rm -f -i mariadb phpmyadmin
 podman machine stop
-podman machine rm
-echo "PODLAMP has been stopped and all remnants have been removed\nIf you wish to run PODLAMP again, you must run Setup\nYou can now manually remove the Podman package if you wish\n"
+podman machine rm -f
+echo -e "\nPODLAMP has been stopped and all remnants have been removed\nIf you wish to run PODLAMP again, you must run Setup\nYou can now manually remove the Podman package if you wish\n"
+MENU
 }
 
 function TEST {
@@ -44,7 +47,7 @@ podman run --name hello-world hello-world
 podman rm hello-world
 podman image rm podman/hello
 echo -e "\nIf you see something similar to what is seen here: https://github.com/containers/podman?tab=readme-ov-file#podman-hello\nThen podman is running properly\n"
-
+MENU
 }
 
 ################################################################################
