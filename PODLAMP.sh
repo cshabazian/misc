@@ -9,7 +9,9 @@ PODMAN_EXISTS=$(command -v podman > /dev/null ; echo $?)
 
 function INSTALL_PODMAN {
 read -n1 -p "Podman does not appear to be installed.  Would you like to install it now? (Y/N): " INSTALL_ANSWER
-if [ "${INSTALL_ANSWER^^}" = "Y" ] ; then
+CAPS_ANSWER=$(echo "${INSTALL_ANSWER" | tr '[:lower:]' '[:upper:]')
+
+if [ "${CAPS_ANSWER}" = "Y" ] ; then
   PMVER=$(curl -I --silent https://github.com/containers/podman/releases/latest | grep location | awk '{print $2}' | cut -d "v" -f 2 | sed -e "s/\r//g")
   curl -L https://github.com/containers/podman/releases/download/v${PMVER}/podman-installer-macos-$(uname -m).pkg -o /tmp/podman-installer-macos-$(uname -m).pkg
   sudo installer -store -pkg "/tmp/podman-installer-macos-$(uname -m).pkg" -target /
