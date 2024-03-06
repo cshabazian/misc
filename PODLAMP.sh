@@ -7,6 +7,20 @@ PODMAN_EXISTS=$(command -v podman > /dev/null ; echo $?)
 #############  These are the functions that are called by the menu  ############
 ################################################################################
 
+function INSTALL_PODMAN {
+read -n1 -p "Podman does not appear to be installed.  Would you like to install it now? (Y/N): " INSTALL_ANSWER
+if [ "${INSTALL_ANSWER^^}" = "Y" ] ; then
+  PMVER=$(curl -I --silent https://github.com/containers/podman/releases/latest | grep location | awk '{print $2}' | cut -d "v" -f 2 | sed -e "s/\r//g")
+  curl -L https://github.com/containers/podman/releases/download/v${PMVER}/podman-installer-macos-$(uname -m).pkg -o /tmp/podman-installer-macos-$(uname -m).pkg
+  sudo installer -store -pkg "/tmp/podman-installer-macos-$(uname -m).pkg" -target /
+  PODMAN_EXISTS=$(command -v podman > /dev/null ; echo $?)
+  [[ $PODMAN_EXISTS = 0 ]] || echo -e "\nThe install appears to have failed.  Please install it manually from https://github.com/containers/podman/releases/latest and try again\n" || break
+  MENU
+else
+  echo -e "\nPodman needs to be installed before running this script.  Please install it manually from https://github.com/containers/podman/releases/latest and try again\n"
+fi
+}
+
 function SETUP {
 podman machine init
 podman machine set --rootful
@@ -86,4 +100,5 @@ done
 ##################  End of functions, now just call the Menu  ##################
 ################################################################################
 
-[[ $PODMAN_EXISTS = 0 ]] && MENU || echo -e "\nPodman doesn't appear to be installed.  Please install it from https://github.com/containers/podman/releases/latest and try again\n"
+#[[ $PODMAN_EXISTS = 0 ]] && MENU || echo -e "\nPodman doesn't appear to be installed.  Please install it from https://github.com/containers/podman/releases/latest and try again\n"
+[[ $PODMAN_EXISTS = 0 ]] && MENU || INSTALL_PODMAN
