@@ -57,7 +57,7 @@ podman machine rm -f
 sudo /opt/podman/bin/podman-mac-helper uninstall
 sudo rm /etc/paths.d/podman-pkg
 sudo rm -rfv /opt/podman
-echo -e "\nPODLAMP has been stopped and all remnants have been removed\nIf you wish to run PODLAMP again, you must run Setup\nYou can now manually remove the Podman package if you wish\n"
+echo -e "\nPODLAMP has been stopped, all remnants have been removed, and podman has been removed.\nIf you wish to run PODLAMP again, you must run Setup\n"
 MENU
 }
 
