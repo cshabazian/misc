@@ -13,7 +13,7 @@ CAPS_ANSWER=$(echo "${INSTALL_ANSWER}" | tr '[:lower:]' '[:upper:]')
 
 if [ "${CAPS_ANSWER}" = "Y" ] ; then
   PMVER=$(curl -I --silent https://github.com/containers/podman/releases/latest | grep location | awk '{print $2}' | cut -d "v" -f 2 | sed -e "s/\r//g")
-  curl -L https://github.com/containers/podman/releases/download/v${PMVER}/podman-installer-macos-$(uname -m).pkg -o /tmp/podman-installer-macos-$(uname -m).pkg
+  curl --silent -L https://github.com/containers/podman/releases/download/v${PMVER}/podman-installer-macos-$(uname -m).pkg -o /tmp/podman-installer-macos-$(uname -m).pkg
   sudo installer -store -pkg "/tmp/podman-installer-macos-$(uname -m).pkg" -target /
   PODMAN_EXISTS=$(command -v podman > /dev/null ; echo $?)
   [[ $PODMAN_EXISTS = 0 ]] || echo -e "\nThe install appears to have failed.  Please install it manually from https://github.com/containers/podman/releases/latest and try again\n" || break
