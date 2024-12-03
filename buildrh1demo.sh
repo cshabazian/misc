@@ -9,7 +9,7 @@ if [ "${1}" = "-h" ] || [ "${1}" = "--help" ] ; then echo -e "\nUSAGE:\n$(basena
 [[ $(command -v ansible-playbook) ]] || sudo dnf -y install ansible-core
 [[ $(command -v git) ]] || sudo dnf -y install git
 
-if [ -z ${1} ] ; then
+if [ "${1}" = "" ] ; then
 echo -e "\n\nGet an offline API token from https://console.redhat.com/ansible/automation-hub/token\n"
 read -p "What is your offline token? " offline_token
 else
